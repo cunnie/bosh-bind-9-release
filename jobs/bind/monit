@@ -1,0 +1,5 @@
+check process bind
+  with pidfile /var/vcap/sys/run/bind/pid
+  start program "/var/vcap/jobs/bind/bin/ctl start"
+  stop program "/var/vcap/jobs/bind/bin/ctl stop"
+  group vcap
