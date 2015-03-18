@@ -1,5 +1,12 @@
 ---
 name: bind
 templates:
+  ctl.sh: bin/ctl
+  named.conf.erb: etc/named.conf
 
 packages:
+- bind-9-9.10.2
+
+properties:
+  config_file:
+    description: 'The contents of named.conf'
