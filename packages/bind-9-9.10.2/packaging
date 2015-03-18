@@ -1,0 +1,10 @@
+# abort script on any command that exits with a non zero value
+set -e
+
+curl -OL ftp://ftp.isc.org/isc/bind9/9.10.2/bind-9.10.2.tar.gz
+tar xvzf bind-9.10.2.tar.gz
+cd bind-9.10.2
+./configure --prefix=${BOSH_INSTALL_TARGET}
+make
+make check
+make install
