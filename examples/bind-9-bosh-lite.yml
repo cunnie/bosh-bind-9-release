@@ -1,0 +1,62 @@
+---
+name: bind-9-server
+
+# The BIND 9 Server is deployed to 10.99.8.62
+# The compilation VM is deployed at 10.99.8.61 (if needed)
+# All other IPs are excluded from BOSH
+director_uuid: PLACEHOLDER-DIRECTOR-UUID
+compilation:
+  cloud_properties:
+    ram: 2048
+    disk: 4096
+    cpu: 2
+  network: default
+  reuse_compilation_vms: true
+  workers: 1
+jobs:
+- instances: 1
+  name: bind-9
+  networks:
+  - default:
+    - dns
+    - gateway
+    name: default
+    static_ips:
+    - 10.99.8.62
+  persistent_disk: 16
+  resource_pool: bind-9_pool
+  templates:
+  - { release: bind-9, name: bind-9 }
+  properties:
+    config_file: |
+      zone "." in{
+        type hint;
+        file "root.servers";
+      };      
+networks:
+- name: default
+  subnets:
+  - cloud_properties:
+      name: VirtualBox Network
+      range: 10.99.8.0/23
+    dns:
+      - 8.8.8.8
+    gateway: 10.99.8.1
+    static:
+    - 10.99.8.62
+    reserved:
+    - 10.99.8.2  - 10.99.8.60
+    - 10.99.8.63 - 10.99.8.254
+releases:
+  - name: bind-9
+    version: latest
+resource_pools:
+- cloud_properties:
+    ram: 2048
+    disk: 8192
+    cpu: 1
+  name: bind-9_pool
+  network: default
+  stemcell:
+    name: bosh-warden-boshlite-centos-go_agent
+    version: latest
