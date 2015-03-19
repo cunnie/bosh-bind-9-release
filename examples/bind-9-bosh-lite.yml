@@ -60,3 +60,9 @@ resource_pools:
   stemcell:
     name: bosh-warden-boshlite-centos-go_agent
     version: latest
+update:
+  canaries: 1
+  canary_watch_time: 30000 - 600000
+  max_in_flight: 8
+  serial: false
+  update_watch_time: 30000 - 600000
