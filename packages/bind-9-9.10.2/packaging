@@ -14,5 +14,4 @@ tar xvzf bind-9.10.2.tar.gz
 cd bind-9.10.2
 ./configure --prefix=${BOSH_INSTALL_TARGET}
 make
-make check
 make install
