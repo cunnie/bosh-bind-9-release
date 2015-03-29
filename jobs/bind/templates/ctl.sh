@@ -14,7 +14,7 @@ case $1 in
 
     cd /var/vcap/packages/bind
 
-    exec /var/vcap/packages/bin/bin/named -u vcap
+    exec /var/vcap/packages/bind-9-9.10.2/sbin/named -u vcap
 
     ;;
 
