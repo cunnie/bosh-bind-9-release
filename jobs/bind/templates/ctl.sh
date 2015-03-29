@@ -1,7 +1,8 @@
 #!/bin/bash
 
-RUN_DIR=/var/vcap/sys/run/bind
-LOG_DIR=/var/vcap/sys/log/bind
+# named logs to syslog, daemon facility
+# BOSH captures these in /var/log/daemon.log
+RUN_DIR=/var/vcap/sys/run/named
 PIDFILE=${RUN_DIR}/pid
 
 case $1 in
@@ -18,8 +19,8 @@ case $1 in
       apt-get install libjson0
     fi
 
-    mkdir -p $RUN_DIR $LOG_DIR
-    chown -R vcap:vcap $RUN_DIR $LOG_DIR
+    mkdir -p $RUN_DIR
+    chown -R vcap:vcap $RUN_DIR
 
     echo $$ >> $PIDFILE
 
