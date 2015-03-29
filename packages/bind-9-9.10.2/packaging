@@ -1,6 +1,14 @@
 # abort script on any command that exits with a non zero value
 set -e
 
+if [ -f /etc/redhat-release ]; then
+  # install libjson0 for CentOS stemcells
+  yum install -y json-c
+elif [ -f /etc/lsb-release ]; then
+  # install libjson0 for Ubuntu stemcells (not tested)
+  apt-get install libjson0
+fi
+
 curl -OL ftp://ftp.isc.org/isc/bind9/9.10.2/bind-9.10.2.tar.gz
 tar xvzf bind-9.10.2.tar.gz
 cd bind-9.10.2
