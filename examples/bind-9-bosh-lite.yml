@@ -1,8 +1,8 @@
 ---
 name: bind-9-server
 
-# The BIND 9 Server is deployed to 10.99.8.62
-# The compilation VM is deployed at 10.99.8.61 (if needed)
+# The BIND 9 Server is deployed to 10.244.0.62
+# The compilation VM is deployed at 10.244.0.61 (if needed)
 # All other IPs are excluded from BOSH
 director_uuid: PLACEHOLDER-DIRECTOR-UUID
 compilation:
@@ -22,11 +22,11 @@ jobs:
     - gateway
     name: default
     static_ips:
-    - 10.99.8.62
+    - 10.244.0.64
   persistent_disk: 16
   resource_pool: bind-9_pool
   templates:
-  - { release: bind-9, name: bind-9 }
+  - { release: bind-9, name: bind }
   properties:
     config_file: |
       zone "." in{
@@ -38,15 +38,15 @@ networks:
   subnets:
   - cloud_properties:
       name: VirtualBox Network
-    range: 10.99.8.0/23
+    range: 10.244.0.0/24
     dns:
       - 8.8.8.8
-    gateway: 10.99.8.1
+    gateway: 10.244.0.1
     static:
-    - 10.99.8.62
+    - 10.244.0.64 - 10.244.0.67
     reserved:
-    - 10.99.8.2  - 10.99.8.60
-    - 10.99.8.63 - 10.99.8.254
+    - 10.244.0.2  - 10.244.0.60
+    - 10.244.0.68 - 10.244.0.254
 releases:
   - name: bind-9
     version: latest
