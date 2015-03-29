@@ -23,9 +23,7 @@ case $1 in
 
     echo $$ >> $PIDFILE
 
-    cd /var/vcap/packages/bind
-
-    exec /var/vcap/packages/bind-9-9.10.2/sbin/named -u vcap
+    exec /var/vcap/packages/bind-9-9.10.2/sbin/named -u vcap -c /var/vcap/jobs/bind/etc/named.conf
 
     ;;
 
