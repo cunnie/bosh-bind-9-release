@@ -13,7 +13,7 @@ case $1 in
       # Install libjson0 for CentOS stemcells.
       # We first check if it's installed to prevent an
       # an over-eager yum from contacting the Internet.
-      rpm -qi json-c > /dev/null || yum install -y libjson.0
+      rpm -qi json-c > /dev/null || yum install -y json-c
     elif [ -f /etc/lsb-release ]; then
       # install libjson0 for Ubuntu stemcells (not tested)
       apt-get install libjson0
