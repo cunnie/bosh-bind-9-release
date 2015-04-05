@@ -22,7 +22,7 @@ jobs:
     - gateway
     name: default
     static_ips:
-    - 10.244.0.64
+    - 10.244.0.66
   persistent_disk: 16
   resource_pool: bind-9_pool
   templates:
@@ -38,15 +38,12 @@ networks:
   subnets:
   - cloud_properties:
       name: VirtualBox Network
-    range: 10.244.0.0/24
+    range: 10.244.0.64/30
     dns:
       - 8.8.8.8
-    gateway: 10.244.0.1
+    gateway: 10.244.0.65
     static:
-    - 10.244.0.64 - 10.244.0.67
-    reserved:
-    - 10.244.0.2  - 10.244.0.60
-    - 10.244.0.68 - 10.244.0.254
+    - 10.244.0.66
 releases:
   - name: bind-9
     version: latest
