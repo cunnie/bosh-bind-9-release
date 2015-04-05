@@ -29,9 +29,9 @@ jobs:
   - { release: bind-9, name: bind }
   properties:
     config_file: |
-      zone "." in{
-        type hint;
-        file "root.servers";
+      options {
+        recursion yes;
+        forwarders { 8.8.8.8; 8.8.4.4; };
       };      
 networks:
 - name: default
