@@ -14,7 +14,7 @@ tar xvzf bind-9.10.2.tar.gz
 cd bind-9.10.2
 ./configure \
   --prefix=${BOSH_INSTALL_TARGET} \
-  --sysconfdir=/var/vcap/jobs/bind/etc \
+  --sysconfdir=/var/vcap/jobs/named/etc \
   --localstatedir=/var/vcap/sys
 make
 make install
