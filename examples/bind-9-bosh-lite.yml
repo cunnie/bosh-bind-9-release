@@ -15,7 +15,7 @@ compilation:
   workers: 1
 jobs:
 - instances: 1
-  name: bind-9
+  name: named
   networks:
   - default:
     - dns
@@ -26,7 +26,7 @@ jobs:
   persistent_disk: 16
   resource_pool: bind-9_pool
   templates:
-  - { release: bind-9, name: bind }
+  - { release: bind-9, name: named }
   properties:
     config_file: |
       options {
