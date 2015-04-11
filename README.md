@@ -1,2 +1,51 @@
-# bosh-bind-9-release
-BOSH release for the BIND 9 DNS Server
+# BOSH BIND 9 Release
+This is a *BOSH* release that can be used to deploy a BIND 9 nameserver.
+
+[BOSH](http://bosh.io/) is a tool that deploys VMs and software.
+[ISC](https://www.isc.org/)'s [BIND 9](https://www.isc.org/downloads/BIND/) is a
+DNS nameserver.
+
+## How To
+
+### 0. Install BOSH and BOSH CLI
+BOSH runs in a special VM which will need to be deployed prior to deploying this BIND release. You will also need to have installed the BOSH CLI on your local workstation (i.e. the *bosh_cli* Ruby gem)
+
+### 1. Target BOSH and login
+We assume you're using [BOSH Lite](https://github.com/cloudfoundry/bosh-lite) (*BOSH* under VirtualBox); however, if you have already deployed a *MicroBOSH* or full *BOSH*, then substitute the correct IP address/hostname and credentials below.
+
+Target the IP address (defaults to 192.168.50.4) and log in with the default account and password (admin/admin):
+
+```
+bosh target 192.168.50.4
+bosh login admin admin
+```
+
+### 2. Clone and *cd* to this repo
+```
+git clone https://github.com/cunnie/bosh-bind-9-release.git
+cd bosh-bind-9-release
+```
+
+### 3. Download and upload the stemcells to BOSH
+```
+mkdir stemcells
+pushd stemcells
+curl -OL https://s3.amazonaws.com/bosh-warden-stemcells/bosh-stemcell-2776-warden-boshlite-centos-go_agent.tgz
+popd
+bosh upload stemcell stemcells/bosh-stemcell-2776-warden-boshlite-centos-go_agent.tgz
+```
+
+### 4. Create and upload the BOSH Release
+```
+bosh create release --force
+bosh upload release dev_releases/bind-9/bind-9-0+dev.1.yml
+```
+If you iterate through several releases, remember to increment the release number when uploading (e.g. "...9-0+dev.2.yml").
+### 5. Create Manifest from Example
+```
+
+```
+
+### Shortcomings
+
+The example deployment manifests do not include a persistent store; In other words, it would be reasonable to use this release to deploy a secondary or caching-only nameserver, but not a primary nameserver.
