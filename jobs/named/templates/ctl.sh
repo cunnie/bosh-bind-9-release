@@ -3,7 +3,8 @@
 # named logs to syslog, daemon facility
 # BOSH captures these in /var/log/daemon.log
 RUN_DIR=/var/vcap/sys/run/named
-PIDFILE=${RUN_DIR}/pid
+# PIDFILE is created by named, not by this script
+PIDFILE=${RUN_DIR}/named.pid
 
 case $1 in
 
@@ -21,8 +22,6 @@ case $1 in
 
     mkdir -p $RUN_DIR
     chown -R vcap:vcap $RUN_DIR
-
-    echo $$ >> $PIDFILE
 
     exec /var/vcap/packages/bind-9-9.10.2/sbin/named -u vcap -c /var/vcap/jobs/named/etc/named.conf
 
