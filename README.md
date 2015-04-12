@@ -61,9 +61,8 @@ bosh -n deploy
 nslookup google.com 10.244.0.66
 ```
 
-
 ### Bugs
 
 The example deployment manifests do not include a persistent store; In other words, it would be reasonable to use this release to deploy a secondary or caching-only nameserver, but not a primary nameserver.
 
-The configuration in the example deployment manifest allows recursive requests from anywhere, technically an "Open DNS Resolver". This allows the deployed nameserver to be used in a Distributed Denial of Service attack using [DNS Amplification](https://blog.cloudflare.com/deep-inside-a-dns-amplification-ddos-attack/). In other words, please modify the manifest to exclude recursive queries before deploying the nameserver to the Internet at large.
+The configuration in the example deployment manifest allows recursive requests from anywhere, technically an "Open DNS Resolver". This allows the deployed nameserver to be used in a Distributed Denial of Service attack using [DNS Amplification](https://blog.cloudflare.com/deep-inside-a-dns-amplification-ddos-attack/). Please modify the manifest to exclude recursive queries before deploying the nameserver to the Internet at large.
