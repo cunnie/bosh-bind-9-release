@@ -33,7 +33,7 @@ jobs:
         recursion yes;
         allow-recursion { any; };
         forwarders { 8.8.8.8; 8.8.4.4; };
-      };      
+      };
 networks:
 - name: default
   subnets:
