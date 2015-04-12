@@ -31,21 +31,21 @@ case $1 in
 
     PID=$(cat $PIDFILE)
     if [ -n $PID ]; then
-      SIGNAL=0
+      SIGNAL=TERM
       N=1
       while kill -$SIGNAL $PID 2>/dev/null; do
         if [ $N -eq 1 ]; then
           echo "waiting for pid $PID to die"
         fi
         if [ $N -eq 11 ]; then
-          echo "giving up on pid $PID with kill -0; trying -9"
-          SIGNAL=9
+          echo "giving up on pid $PID with kill -TERM; trying -KILL"
+          SIGNAL=KILL
         fi
         if [ $N -gt 20 ]; then
           echo "giving up on pid $PID"
           break
         fi
-        n=$(($N+1))
+        N=$(($N+1))
         sleep 1
       done
     fi
