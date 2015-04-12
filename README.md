@@ -54,7 +54,7 @@ perl -pi -e "s/PLACEHOLDER-DIRECTOR-UUID/$(bosh status --uuid)/" config/bind-9-b
 ```
 
 ### 6. Deploy and Test
-If you're not using *BOSH Lite*, then substite the correct IP address when you ue the *nslookup* command. The IP address is available from your deployment manifest or by typing `bosh vms`.
+If you're not using *BOSH Lite*, then substite the correct IP address when you use the *nslookup* command. The IP address is available from your deployment manifest or by typing `bosh vms`.
 
 ```
 bosh -n deploy
