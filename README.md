@@ -41,10 +41,22 @@ bosh create release --force
 bosh upload release dev_releases/bind-9/bind-9-0+dev.1.yml
 ```
 If you iterate through several releases, remember to increment the release number when uploading (e.g. "...9-0+dev.2.yml").
+
 ### 5. Create Manifest from Example
-```
+We copy the manifest template and set its UUID to our BOSH's UUID:
 
 ```
+cp examples/bind-9-bosh-lite.yml config/
+perl -pi -e "s/PLACEHOLDER-DIRECTOR-UUID/$(bosh status --uuid)/" config/bind-9-bosh-lite.yml
+```
+
+### 6. Deploy and Test
+
+```
+bosh -n deploy
+nslookup google.com 10.244.0.66
+```
+
 
 ### Shortcomings
 
