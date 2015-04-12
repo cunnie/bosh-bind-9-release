@@ -38,12 +38,15 @@ bosh upload stemcell stemcells/bosh-stemcell-2776-warden-boshlite-centos-go_agen
 ### 4. Create and upload the BOSH Release
 ```
 bosh create release --force
+    Please enter development release name: bind-9
 bosh upload release dev_releases/bind-9/bind-9-0+dev.1.yml
 ```
 If you iterate through several releases, remember to increment the release number when uploading (e.g. "...9-0+dev.2.yml").
 
 ### 5. Create Manifest from Example
-We copy the manifest template and set its UUID to our BOSH's UUID:
+We copy the manifest template and set its UUID to our BOSH's UUID.
+
+If you're not using *BOSH Lite*, edit the manifest to change the network information and IP addresses:
 
 ```
 cp examples/bind-9-bosh-lite.yml config/
@@ -51,6 +54,7 @@ perl -pi -e "s/PLACEHOLDER-DIRECTOR-UUID/$(bosh status --uuid)/" config/bind-9-b
 ```
 
 ### 6. Deploy and Test
+If you're not using *BOSH Lite*, then substite the correct IP address when you ue the *nslookup* command. The IP address is available from your deployment manifest or by typing `bosh vms`.
 
 ```
 bosh -n deploy
@@ -58,6 +62,8 @@ nslookup google.com 10.244.0.66
 ```
 
 
-### Shortcomings
+### Bugs
 
 The example deployment manifests do not include a persistent store; In other words, it would be reasonable to use this release to deploy a secondary or caching-only nameserver, but not a primary nameserver.
+
+The configuration in the example deployment manifest allows recursive requests from anywhere, technically an "Open DNS Resolver". This allows the deployed nameserver to be used in a Distributed Denial of Service attack using [DNS Amplification](https://blog.cloudflare.com/deep-inside-a-dns-amplification-ddos-attack/). In other words, please modify the manifest to exclude recursive queries before deploying the nameserver to the Internet at large.
