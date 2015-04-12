@@ -1,9 +1,5 @@
 ---
 name: bind-9-server
-
-# The BIND 9 Server is deployed to 10.244.0.62
-# The compilation VM is deployed at 10.244.0.61 (if needed)
-# All other IPs are excluded from BOSH
 director_uuid: PLACEHOLDER-DIRECTOR-UUID
 compilation:
   cloud_properties:
