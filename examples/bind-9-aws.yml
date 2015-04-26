@@ -1,0 +1,65 @@
+---
+name: bind-9-server
+director_uuid: PLACEHOLDER-DIRECTOR-UUID
+compilation:
+  cloud_properties:
+    ram: 2048
+    disk: 4096
+    cpu: 2
+  network: default
+  reuse_compilation_vms: true
+  workers: 1
+jobs:
+- instances: 1
+  name: named
+  networks:
+  - default:
+    - dns
+    - gateway
+    name: default
+    static_ips:
+    - 10.244.0.66
+  persistent_disk: 16
+  resource_pool: bind-9_pool
+  templates:
+  - { release: bind-9, name: named }
+  properties:
+    config_file: |
+      options {
+        recursion yes;
+        allow-recursion { any; };
+        forwarders { 8.8.8.8; 8.8.4.4; };
+      };
+networks:
+- name: default
+  subnets:
+  - range: 10.244.0.64/30
+    dns:
+      - 8.8.8.8
+    gateway: 10.244.0.65
+    static: [10.244.0.66]
+    cloud_properties: {}
+  - range: 10.244.0.68/30
+    dns:
+      - 8.8.8.8
+    gateway: 10.244.0.69
+    cloud_properties: {}
+releases:
+  - name: bind-9
+    version: latest
+resource_pools:
+- cloud_properties:
+    ram: 2048
+    disk: 8192
+    cpu: 1
+  name: bind-9_pool
+  network: default
+  stemcell:
+    name: bosh-warden-boshlite-centos-go_agent
+    version: latest
+update:
+  canaries: 1
+  canary_watch_time: 30000 - 600000
+  max_in_flight: 8
+  serial: false
+  update_watch_time: 30000 - 600000
