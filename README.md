@@ -57,7 +57,12 @@ perl -pi -e "s/PLACEHOLDER-DIRECTOR-UUID/$(bosh status --uuid)/" config/bind-9-b
 If you're not using *BOSH Lite*, then substite the correct IP address when you use the *nslookup* command. The IP address is available from your deployment manifest or by typing `bosh vms`.
 
 ```
+bosh deployment config/bind-9-bosh-lite.yml
 bosh -n deploy
+# if you're using BOSH Lite, you'll probably need
+# to add a route similar to something like this
+sudo route add -net 10.244.0.0/24 192.168.50.4
+#  attempt the lookup
 nslookup google.com 10.244.0.66
 ```
 
