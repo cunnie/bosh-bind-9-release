@@ -33,14 +33,17 @@ jobs:
 networks:
 - name: default
   subnets:
-  - cloud_properties:
-      name: VirtualBox Network
-    range: 10.244.0.64/30
+  - range: 10.244.0.64/30
     dns:
       - 8.8.8.8
     gateway: 10.244.0.65
-    static:
-    - 10.244.0.66
+    static: [10.244.0.66]
+    cloud_properties: {}
+  - range: 10.244.0.68/30
+    dns:
+      - 8.8.8.8
+    gateway: 10.244.0.69
+    cloud_properties: {}
 releases:
   - name: bind-9
     version: latest
