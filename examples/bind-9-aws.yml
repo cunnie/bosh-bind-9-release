@@ -1,28 +1,57 @@
 ---
 name: bind-9-server
 director_uuid: PLACEHOLDER-DIRECTOR-UUID
+
+releases:
+  - name: bind-9
+    version: latest
+
 compilation:
-  cloud_properties:
-    ram: 2048
-    disk: 4096
-    cpu: 2
+  workers: 1
   network: default
   reuse_compilation_vms: true
-  workers: 1
+  cloud_properties:
+    instance_type: t2.small
+
+update:
+  canaries: 1
+  canary_watch_time: 30000 - 600000
+  max_in_flight: 8
+  serial: false
+  update_watch_time: 30000 - 600000
+
+networks:
+- name: elastic
+  type: vip
+  cloud_properties: {}
+- name: default
+  type: dynamic
+  cloud_properties:
+    security_groups:
+      - default # CHANGE: Security Group
+
+resource_pools:
+- name: bind-9_pool
+  network: default
+  size: 4
+  stemcell:
+    name: bosh-warden-boshlite-centos-go_agent
+    version: latest
+  cloud_properties:
+    instance_type: t2.micro
+  env:
+    bosh:
+      # password generated using perl -e 'print crypt("password", "\$6\$salt")."\n";'
+      password: $6$salt$yytukQ3hNKJrdMxsgSdn4La5nKVexgPqIp9naLG4sxl4OIcDPdmKPymUDdctokBSxzMmHLu9lEPEV1I6.NHsh.
+
 jobs:
-- instances: 1
-  name: named
-  networks:
-  - default:
-    - dns
-    - gateway
-    name: default
-    static_ips:
-    - 10.244.0.66
-  persistent_disk: 16
-  resource_pool: bind-9_pool
+- name: named
   templates:
   - { release: bind-9, name: named }
+  instances: 1
+  resource_pool: bind-9_pool
+  networks:
+  - default: [dns, gateway]
   properties:
     config_file: |
       options {
@@ -30,36 +59,3 @@ jobs:
         allow-recursion { any; };
         forwarders { 8.8.8.8; 8.8.4.4; };
       };
-networks:
-- name: default
-  subnets:
-  - range: 10.244.0.64/30
-    dns:
-      - 8.8.8.8
-    gateway: 10.244.0.65
-    static: [10.244.0.66]
-    cloud_properties: {}
-  - range: 10.244.0.68/30
-    dns:
-      - 8.8.8.8
-    gateway: 10.244.0.69
-    cloud_properties: {}
-releases:
-  - name: bind-9
-    version: latest
-resource_pools:
-- cloud_properties:
-    ram: 2048
-    disk: 8192
-    cpu: 1
-  name: bind-9_pool
-  network: default
-  stemcell:
-    name: bosh-warden-boshlite-centos-go_agent
-    version: latest
-update:
-  canaries: 1
-  canary_watch_time: 30000 - 600000
-  max_in_flight: 8
-  serial: false
-  update_watch_time: 30000 - 600000
