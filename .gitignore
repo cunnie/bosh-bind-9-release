@@ -1,11 +1,9 @@
-config/dev.yml
-config/private.yml
-config/bind-9-bosh-lite.yml
-config/bind-9-aws.yml
-stemcells
-dev_releases
+config/
+assets/
+stemcells/
+dev_releases/
 .blobs
-blobs
+blobs/
 .dev_builds
 .idea
 .DS_Store
