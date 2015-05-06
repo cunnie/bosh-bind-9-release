@@ -1,57 +1,35 @@
 ---
-name: bind-9-server
-director_uuid: PLACEHOLDER-DIRECTOR-UUID
-
-releases:
-  - name: bind-9
-    version: latest
-
-compilation:
-  workers: 1
-  network: default
-  reuse_compilation_vms: true
-  cloud_properties:
-    instance_type: t2.small
-
-update:
-  canaries: 1
-  canary_watch_time: 30000 - 600000
-  max_in_flight: 8
-  serial: false
-  update_watch_time: 30000 - 600000
-
-networks:
-- name: elastic
-  type: vip
-  cloud_properties: {}
-- name: default
-  type: dynamic
-  cloud_properties:
-    security_groups:
-      - default # CHANGE: Security Group
+name: bind-9
 
 resource_pools:
 - name: bind-9_pool
   network: default
-  size: 4
-  stemcell:
-    name: bosh-warden-boshlite-centos-go_agent
-    version: latest
   cloud_properties:
     instance_type: t2.micro
-  env:
-    bosh:
-      # password generated using perl -e 'print crypt("password", "\$6\$salt")."\n";'
-      password: $6$salt$yytukQ3hNKJrdMxsgSdn4La5nKVexgPqIp9naLG4sxl4OIcDPdmKPymUDdctokBSxzMmHLu9lEPEV1I6.NHsh.
+    ephemeral_disk:
+      size: 4000
+      type: gp2
+    availability_zone: us-east-1a
+#  env:
+#    bosh:
+#      # password generated using perl -e 'print crypt("password", "\$6\$salt")."\n";'
+#      password: $6$salt$yytukQ3hNKJrdMxsgSdn4La5nKVexgPqIp9naLG4sxl4OIcDPdmKPymUDdctokBSxzMmHLu9lEPEV1I6.NHsh.
+  stemcell:
+    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-centos-7-go_agent?v=2962
+    sha1: 4dc54faf113c991e5b5d87d1cc566076606e87cd
 
 jobs:
 - name: named
+  instances: 1
+  #persistent_disk: 10240 # future: put in persistent disk
   templates:
   - { release: bind-9, name: named }
-  instances: 1
   resource_pool: bind-9_pool
   networks:
-  - default: [dns, gateway]
+  - name: vip
+    # CHANGEME: replace the IP address with your Elastic IP
+    static_ips: [52.6.149.97]
+  - name: default
   properties:
     config_file: |
       options {
@@ -59,3 +37,56 @@ jobs:
         allow-recursion { any; };
         forwarders { 8.8.8.8; 8.8.4.4; };
       };
+
+networks:
+- name: default
+  type: dynamic
+  cloud_properties:
+    # CHANGEME: replace the subnet with your subnet-id
+    subnet: subnet-1c90ef6b
+- name: vip
+  type: vip
+
+cloud_provider:
+  template: {name: cpi, release: bosh-aws-cpi}
+
+  ssh_tunnel:
+    # CHANGEME: replace the IP address with your Elastic IP
+    host: 52.6.149.97
+    port: 22
+    user: vcap
+    # CHANGEME: replace with the pathname of your downloaded AWS Key Pair
+    # (Power users: it can NOT be passphrase-protected, sorry)
+    private_key: /Users/cunnie/.ssh/aws_nono.pem
+
+  # CHANGEME: replace 'dmitriy' with a secure password
+  mbus: https://nats:dmitriy@52.6.149.97:6868
+
+  properties:
+    aws:
+      # CHANGEME: replace with your AWS Access Key
+      access_key_id: AKIAIZWITxxxxxxxxxxx
+      # CHANGEME: replace with your AWS Secret
+      secret_access_key: 0+B1XW6VVEYw55J+ZjfqMW+AjELxxxxxxxxxxxxx
+      # CHANGEME: replace with your AWS Key Pair name
+      default_key_name: aws_nono
+      # CHANGEME: replace with your security group
+      # the security MUST be associated with your VPC
+      default_security_groups: [no-filter-vpc]
+      region: us-east-1
+
+    # CHANGEME: replace 'dmitriy' with a secure password
+    agent: {mbus: "https://nats:dmitriy@0.0.0.0:6868"}
+
+    blobstore:
+      provider: local
+      path: /var/vcap/micro_bosh/data/cache
+
+    ntp: [0.north-america.pool.ntp.org]
+
+releases:
+  - name: bind-9
+    url: file://dev_releases/bind-9/bind-9-0+dev.2.tgz
+  - name: bosh-aws-cpi
+    url: file://assets/bosh-aws-cpi-release-7.tgz
+    sha: 6545812c1c8245331b8c420f886dafd24b866eed
