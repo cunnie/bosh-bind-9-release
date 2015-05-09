@@ -32,10 +32,10 @@ jobs:
   - name: default
   properties:
     config_file: |
-      options {
-        recursion yes;
-        allow-recursion { any; };
-        forwarders { 8.8.8.8; 8.8.4.4; };
+      zone "nono.com" {
+        type slave;
+          file "/etc/bind/slave/nono.com";
+          masters { 24.23.190.188; };
       };
 
 networks:
