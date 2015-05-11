@@ -28,7 +28,8 @@ jobs:
   networks:
   - name: vip
     # CHANGEME: replace the IP address with your Elastic IP
-    static_ips: [52.6.149.97]
+    # the Elastic IP must have scope 'vpc' not 'standard'
+    static_ips: [52.0.56.137]
   - name: default
   properties:
     config_file: |
@@ -52,15 +53,16 @@ cloud_provider:
 
   ssh_tunnel:
     # CHANGEME: replace the IP address with your Elastic IP
-    host: 52.6.149.97
+    host: 52.0.56.137
     port: 22
     user: vcap
     # CHANGEME: replace with the pathname of your downloaded AWS Key Pair
-    # (Power users: it can NOT be passphrase-protected, sorry)
+    # (Power users: no passphrase-protection otherwise you'll see a
+    # `asn1: structure error: tags don't match` message when deploying
     private_key: /Users/cunnie/.ssh/aws_nono.pem
 
   # CHANGEME: replace 'dmitriy' with a secure password
-  mbus: https://nats:dmitriy@52.6.149.97:6868
+  mbus: https://nats:dmitriy@52.0.56.137:6868
 
   properties:
     aws:
@@ -71,7 +73,7 @@ cloud_provider:
       # CHANGEME: replace with your AWS Key Pair name
       default_key_name: aws_nono
       # CHANGEME: replace with your security group
-      # the security MUST be associated with your VPC
+      # the Security Group MUST have the VPC ID of your VPC (e.g. 'vpc-e4250881')
       default_security_groups: [no-filter-vpc]
       region: us-east-1
 
@@ -86,7 +88,7 @@ cloud_provider:
 
 releases:
   - name: bind-9
-    url: file://dev_releases/bind-9/bind-9-0+dev.2.tgz
+    url: file://dev_releases/bind-9/bind-9-0+dev.1.tgz
   - name: bosh-aws-cpi
     url: file://assets/bosh-aws-cpi-release-7.tgz
     sha: 6545812c1c8245331b8c420f886dafd24b866eed
