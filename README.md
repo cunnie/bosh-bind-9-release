@@ -66,7 +66,15 @@ sudo route add -net 10.244.0.0/24 192.168.50.4
 nslookup google.com 10.244.0.66
 ```
 
+### Stemcells
+
+This has been tested with the following stemcells:
+
+* bosh-aws-xen-hvm-centos-7-go_agent version 2962
+
 ### Bugs
+
+The deployed server *must* be able to reach the Internet, for it downloads and installs necessary JSON packages (via *yum* in the case of CentOS and *apt-get* in the case of Ubuntu). This is admittedly a hack, and a more elegant solution would be to create a BOSH release of the JSON libraries.
 
 The example deployment manifests do not include a persistent store; In other words, it would be reasonable to use this release to deploy a secondary or caching-only nameserver, but not a primary nameserver.
 
