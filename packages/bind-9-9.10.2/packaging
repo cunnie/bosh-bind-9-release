@@ -9,20 +9,54 @@ elif [ -f /etc/lsb-release ]; then
   apt-get install libjson0
 fi
 
+# BOSH_INSTALL_TARGET=/mnt/tmp
+# Install GNU C Library (glibc) statically-linked
+git clone git://sourceware.org/git/glibc.git
+pushd glibc
+  # CentOS 7 uses glibc version 2.17
+  git checkout -b local_glibc-2.17
+  mkdir build
+  pushd build
+    ../configure \
+      --prefix=/usr
+    # need to make dynamic first to avoid
+    # ../include/stdc-predef.h:64:1: fatal error: /mnt/tmp/glibc/build/libc-modules.h: No such file or directory
+    time make
+    ../configure \
+      --prefix=/usr \
+      --enable-static \
+      --disable-shared
+    make check
+  popd
+popd
 # Install KRB5 statically-linked
+curl -OL http://web.mit.edu/kerberos/dist/krb5/1.12/krb5-1.12.3-signed.tar
+tar xvf krb5-1.12.3-signed.tar
+tar xvf krb5-1.12.3.tar.gz
+pushd krb5-1.12.3/src
+    e./confgure \
+  # I don't think '--prefix' matters, but I'm superstitious
+  ./configure \
+    --prefix=${BOSH_INSTALL_TARGET} \
+    --enable-static \
+    --disable-shared
+  make
+  # Install bind
+popd
 curl -OL ftp://ftp.isc.org/isc/bind9/9.10.2/bind-9.10.2.tar.gz
 tar xvzf bind-9.10.2.tar.gz
-cd bind-9.10.2
-# CFLAGS
-# -static static compilation to avoid deploy-time requirement to install
-#    libraries via yum/apt-get. Need GSSAPI directory for headers
-# -I /usr/include/gssapi to avoid error
-#    configure: error: could not determine proper GSSAPI linkage
-#    /bin/ld: cannot find -lgss
-#    /bin/ld: cannot find -lkrb5
-export CFLAGS='-static -I/usr/include/gssapi/ -L/usr/lib64 -lgssapi_krb5'
-./configure \
-  --prefix=${BOSH_INSTALL_TARGET} \
-  --localstatedir=/var/vcap/sys
-make
-make install
+pushd bind-9.10.2
+  # CFLAGS
+  # -static static compilation to avoid deploy-time requirement to install
+  #    libraries via yum/apt-get. Need GSSAPI directory for headers
+  # -I /usr/include/gssapi to avoid error
+  #    configure: error: could not determine proper GSSAPI linkage
+  #    /bin/ld: cannot find -lgss
+  #    /bin/ld: cannot find -lkrb5
+  export CFLAGS='-static -I/usr/include/gssapi/ -L../krb5-1.12.3/src/lib/ -L../krb5-1.12.3/src/lib/gssapi -lgssapi_krb5'
+  ./configure \
+    --prefix=${BOSH_INSTALL_TARGET} \
+    --localstatedir=/var/vcap/sys
+  make
+  make install
+popd
