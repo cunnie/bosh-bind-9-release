@@ -91,4 +91,3 @@ releases:
     url: file://dev_releases/bind-9/bind-9-0+dev.1.tgz
   - name: bosh-aws-cpi
     url: file://assets/bosh-aws-cpi-release-7.tgz
-    sha: 6545812c1c8245331b8c420f886dafd24b866eed
