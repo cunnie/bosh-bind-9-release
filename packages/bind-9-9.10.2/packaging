@@ -9,9 +9,18 @@ elif [ -f /etc/lsb-release ]; then
   apt-get install libjson0
 fi
 
+# Install KRB5 statically-linked
 curl -OL ftp://ftp.isc.org/isc/bind9/9.10.2/bind-9.10.2.tar.gz
 tar xvzf bind-9.10.2.tar.gz
 cd bind-9.10.2
+# CFLAGS
+# -static static compilation to avoid deploy-time requirement to install
+#    libraries via yum/apt-get. Need GSSAPI directory for headers
+# -I /usr/include/gssapi to avoid error
+#    configure: error: could not determine proper GSSAPI linkage
+#    /bin/ld: cannot find -lgss
+#    /bin/ld: cannot find -lkrb5
+export CFLAGS='-static -I/usr/include/gssapi/ -L/usr/lib64 -lgssapi_krb5'
 ./configure \
   --prefix=${BOSH_INSTALL_TARGET} \
   --localstatedir=/var/vcap/sys
