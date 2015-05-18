@@ -14,19 +14,28 @@ fi
 git clone git://sourceware.org/git/glibc.git
 pushd glibc
   # CentOS 7 uses glibc version 2.17
-  git checkout -b local_glibc-2.17
+  # but we use version 2.18 because 2.17 is very
+  # difficult to compile statically, e.g.
+  # need to make dynamic first to avoid
+  # ../include/stdc-predef.h:64:1: fatal error: /mnt/tmp/glibc/build/libc-modules.h: No such file or directory
+  # --enable-static-nss see:
+  # https://sourceware.org/glibc/wiki/FAQ#Even_statically_linked_programs_need_some_shared_libraries_which_is_not_acceptable_for_me.__What_can_I_do.3F
+  # --disable-nscd to avoid nsswitch.c:101:15: error: ‘nscd_init_cb’ defined but not used [-Werror=unused-variable]
+  # static void (*nscd_init_cb) (size_t, struct traced_file *);
+  git checkout -b local_glibc-2.18
   mkdir build
   pushd build
     ../configure \
       --prefix=/usr
-    # need to make dynamic first to avoid
-    # ../include/stdc-predef.h:64:1: fatal error: /mnt/tmp/glibc/build/libc-modules.h: No such file or directory
     time make
     ../configure \
       --prefix=/usr \
-      --enable-static \
-      --disable-shared
+      --enable-static
+    time make # about ~8 minutes on a t2.micro
     make check
+    # fails on (maybe the test fails but library is ok?)
+    # /bin/ld: cannot find -lstdc++
+    # collect2: error: ld returned 1 exit status
   popd
 popd
 # Install KRB5 statically-linked
