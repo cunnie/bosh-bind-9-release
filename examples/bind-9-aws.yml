@@ -90,4 +90,5 @@ releases:
   - name: bind-9
     url: file://dev_releases/bind-9/bind-9-0+dev.1.tgz
   - name: bosh-aws-cpi
-    url: file://assets/bosh-aws-cpi-release-7.tgz
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=7
+    sha1: 6545812c1c8245331b8c420f886dafd24b866eed
