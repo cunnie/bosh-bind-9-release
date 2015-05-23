@@ -9,17 +9,6 @@ PIDFILE=${RUN_DIR}/named.pid
 case $1 in
 
   start)
-    # ugly way to install libjson.0 shared library dependency
-    if [ -f /etc/redhat-release ]; then
-      # Install libjson0 for CentOS stemcells.
-      # We first check if it's installed to prevent an
-      # an over-eager yum from contacting the Internet.
-      rpm -qi json-c > /dev/null || yum install -y json-c
-    elif [ -f /etc/lsb-release ]; then
-      # install libjson0 for Ubuntu stemcells (not tested)
-      apt-get install libjson0
-    fi
-
     mkdir -p $RUN_DIR
     chown -R vcap:vcap $RUN_DIR
 
