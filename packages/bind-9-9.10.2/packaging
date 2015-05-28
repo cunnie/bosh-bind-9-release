@@ -1,6 +1,27 @@
 # abort script on any command that exits with a non zero value
 set -e
 
+# I'm not sure why it needs both libjson and libjson-c, but if I leave one out
+# the build fails
+
+# libjson
+# avoids dreaded message during compilation
+# `./gen: error while loading shared libraries: libjson.so.0: cannot open shared object file: No such file or directory`
+curl -OL http://downloads.sourceforge.net/project/libjson/libjson_7.6.1.zip
+unzip libjson_7.6.1.zip
+pushd libjson
+  # libjson requires both `make` and `make install`; don't even think
+  # of trying to cut corners here.
+  make
+  # create directory to avoid `cp: cannot stat `_internal/Source/Dependencies/': No such file or directory`
+  mkdir -p _internal/Source/Dependencies/
+  # create directory to hold libraries. Really.
+  mkdir -p $BOSH_INSTALL_TARGET/lib
+  # install to libjson.so to /var/vcap/packages/bind-9-9.10.2
+  # we don't want to pollute/overwrite the BOSH VM's shared libraries
+  make install prefix=$BOSH_INSTALL_TARGET exec_prefix=$BOSH_INSTALL_TARGET SHARED=1
+popd
+
 # libjson-c
 # avoids the dreaded message during compilation
 # ./gen: error while loading shared libraries: libjson-c.so.2: cannot open shared object file: No such file or directory
