@@ -9,4 +9,4 @@ packages:
 
 properties:
   named_conf:
-    description: 'The contents of named.conf (named's configuration file)'
+    description: "The contents of named.conf (named's configuration file)"
