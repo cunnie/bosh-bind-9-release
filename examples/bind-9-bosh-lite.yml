@@ -24,7 +24,7 @@ jobs:
   templates:
   - { release: bind-9, name: named }
   properties:
-    config_file: |
+    named_conf: |
       options {
         recursion yes;
         allow-recursion { any; };

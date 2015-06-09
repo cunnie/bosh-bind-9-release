@@ -32,7 +32,7 @@ jobs:
     static_ips: [52.0.56.137]
   - name: default
   properties:
-    config_file: |
+    named_conf: |
       zone "nono.com" {
         type slave;
           file "/etc/bind/slave/nono.com";

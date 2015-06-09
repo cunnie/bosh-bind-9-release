@@ -8,5 +8,5 @@ packages:
 - bind-9-9.10.2
 
 properties:
-  config_file:
-    description: 'The contents of named.conf'
+  named_conf:
+    description: 'The contents of named.conf (named's configuration file)'
