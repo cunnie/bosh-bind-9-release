@@ -1,7 +1,0 @@
----
-name: bind-9-9.10.2
-
-dependencies:
-
-files:
-- bind/placeholder

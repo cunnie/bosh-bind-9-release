@@ -28,11 +28,7 @@ cd bosh-bind-9-release
 
 ### 3. Download and upload the stemcells to BOSH
 ```
-mkdir stemcells
-pushd stemcells
-curl -OL https://s3.amazonaws.com/bosh-warden-stemcells/bosh-stemcell-2776-warden-boshlite-centos-go_agent.tgz
-popd
-bosh upload stemcell stemcells/bosh-stemcell-2776-warden-boshlite-centos-go_agent.tgz
+bosh upload stemcell https://s3.amazonaws.com/bosh-warden-stemcells/bosh-stemcell-3126-warden-boshlite-ubuntu-trusty-go_agent.tgz
 ```
 
 ### 4. Create and upload the BOSH Release
@@ -70,11 +66,9 @@ nslookup google.com 10.244.0.66
 
 This has been tested with the following stemcells:
 
-* bosh-aws-xen-hvm-centos-7-go_agent version 2962
+* [bosh-warden-boshlite-ubuntu-trusty-go_agent 3126](https://s3.amazonaws.com/bosh-warden-stemcells/bosh-stemcell-3126-warden-boshlite-ubuntu-trusty-go_agent.tgz)
 
 ### Bugs
-
-The deployed server *must* be able to reach the Internet, for it downloads and installs necessary JSON packages (via *yum* in the case of CentOS and *apt-get* in the case of Ubuntu). This is admittedly a hack, and a more elegant solution would be to create a BOSH release of the JSON libraries.
 
 The example deployment manifests do not include a persistent store; In other words, it would be reasonable to use this release to deploy a secondary or caching-only nameserver, but not a primary nameserver.
 

@@ -12,7 +12,7 @@ case $1 in
     mkdir -p $RUN_DIR
     chown -R vcap:vcap $RUN_DIR
 
-    exec /var/vcap/packages/bind-9-9.10.2/sbin/named -u vcap -c /var/vcap/jobs/named/etc/named.conf
+    exec /var/vcap/packages/bind/sbin/named -u vcap -c /var/vcap/jobs/named/etc/named.conf
 
     ;;
 

@@ -1,0 +1,15 @@
+# abort script on any command that exits with a non zero value
+set -e
+
+
+cd bind-9.10.3
+# Need the -L to link at link-time, the -rpath to link at runtime
+# downside is the link-path is hard-coded
+./configure \
+  CFLAGS="-L${BOSH_INSTALL_TARGET}/lib -Wl,-rpath=${BOSH_INSTALL_TARGET}/lib" \
+  --prefix=$BOSH_INSTALL_TARGET \
+  --localstatedir=/var/vcap/sys
+make
+make install
+
+echo $BOSH_INSTALL_TARGET
