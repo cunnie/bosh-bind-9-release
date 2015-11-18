@@ -2,14 +2,14 @@
 set -e
 
 
-cd bind-9.10.2
+cd bind-9.10.3
 # Need the -L to link at link-time, the -rpath to link at runtime
 # downside is the link-path is hard-coded
 ./configure \
   CFLAGS="-L${BOSH_INSTALL_TARGET}/lib -Wl,-rpath=${BOSH_INSTALL_TARGET}/lib" \
   --prefix=$BOSH_INSTALL_TARGET \
-  --localstatedir=/var/vcap/sys
-make
+  --localstatedir=/var/vcap/sys || sleep 600
+make || sleep 600
 make install
 
 echo $BOSH_INSTALL_TARGET

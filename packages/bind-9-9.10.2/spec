@@ -1,9 +1,0 @@
----
-name: bind-9-9.10.2
-
-dependencies:
-- json-c-0.12
-- libjson_7.6.1
-
-files:
-- bind/bind-9.10.2.tar.gz

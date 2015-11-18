@@ -5,7 +5,7 @@ templates:
   named.conf.erb: etc/named.conf
 
 packages:
-- bind-9-9.10.2
+- bind
 
 properties:
   named_conf:

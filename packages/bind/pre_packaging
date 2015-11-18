@@ -1,8 +1,7 @@
 # abort script on any command that exits with a non zero value
 set -e
 
-
-tar xvzf bind/bind-9.10.2.tar.gz
+tar xvzf bind/bind-9.10.3.tar.gz
 
 echo $BOSH_INSTALL_TARGET
 
