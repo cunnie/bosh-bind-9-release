@@ -1,3 +1,10 @@
+# No Longer Maintained
+
+This release is no longer being maintained.
+
+Maybe <https://github.com/cloudfoundry-community/bind9-boshrelease> is a better
+alternative.
+
 # BOSH BIND 9 Release
 This is a *BOSH* release that can be used to deploy a BIND 9 nameserver.
 
